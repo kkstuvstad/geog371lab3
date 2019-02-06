@@ -1,4 +1,4 @@
-//Load basemap
+//create map
 var airmap = L.map('map', {
   center: [39.828352, -98.579478],
   zoom: 4,
@@ -7,16 +7,17 @@ var airmap = L.map('map', {
   detectRetina: true
 });
 
+//load basemap
 L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(airmap);
 
-//Add colors
+//Add colors for airports
 var ct_colors = chroma.scale('PuOr').mode('lch').colors(2);
 
 for (i = 0; i < 2; i++) {
     $('head').append($("<style> .marker-color-" + (i + 1).toString() + " { color: " + ct_colors[i] + "; font-size: 15px; text-shadow: 0 0 3px #ffffff;} </style>"));
 }
 
-//Load airport location points and states
+//Load airport location points and creates clickable feature for control towers
 var airports = null;
 
 airports = L.geoJson.ajax("assets/airports.geojson",{
@@ -35,24 +36,25 @@ airports = L.geoJson.ajax("assets/airports.geojson",{
 
 airports.addTo(airmap);
 
-L.geoJson.ajax("assets/us-states.geojson").addTo(airmap);
+//loads states file
+L.geoJson.ajax("assets/us-states.geojson");
 
-//color ramp for states
-var colors = chroma.scale('GnBu').colors(7);
+//color ramp for states created
+colors = chroma.scale('Blues').colors(7);
 
-function setColor(count) {
+function setColor(density) {
     var id = 0;
-    if (count > 60) { id = 6; }
-    else if (count > 50 && count <= 60) { id = 5; }
-    else if (count > 40 && count <= 50) { id = 4; }
-    else if (count > 30 && count <= 40) { id = 3; }
-    else if (count > 20 && count <= 30) { id = 2; }
-    else if (count > 10 && count <= 20) { id = 1; }
+    if (density > 60) { id = 6; }
+    else if (density > 50 && density <= 60) { id = 5; }
+    else if (density > 40 && density <= 50) { id = 4; }
+    else if (density > 30 && density <= 40) { id = 3; }
+    else if (density > 20 && density <= 30) { id = 2; }
+    else if (density > 10 && density <= 20) { id = 1; }
     else { id = 0; }
     return colors[id];
 }
 
-//color palette
+//color palette created for states
 function style(feature) {
     return {
         fillColor: setColor(feature.properties.count),
@@ -64,31 +66,33 @@ function style(feature) {
     };
 }
 
+//adds states and applies colors
 L.geoJson.ajax("assets/us-states.geojson", {
     style: style
 }).addTo(airmap);
 
 //Add basic map elements (legend and scale)
-var legend = L.control({position: 'topright'});
+//adds legend
+var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function () {
-
     var div = L.DomUtil.create('div', 'legend');
-    div.innerHTML += '<b>Number of Airports</b><br />';
-    div.innerHTML += '<i style="background: ' + colors[6] + '; opacity: 0.9"></i><p> > 60</p>';
-    div.innerHTML += '<i style="background: ' + colors[5] + '; opacity: 0.9"></i><p>51 - 60</p>';
-    div.innerHTML += '<i style="background: ' + colors[4] + '; opacity: 0.9"></i><p>41 - 50</p>';
-    div.innerHTML += '<i style="background: ' + colors[3] + '; opacity: 0.9"></i><p>31 - 40</p>';
-    div.innerHTML += '<i style="background: ' + colors[2] + '; opacity: 0.9"></i><p>21 - 30</p>';
-    div.innerHTML += '<i style="background: ' + colors[1] + '; opacity: 0.9"></i><p>11 - 20</p>';
-    div.innerHTML += '<i style="background: ' + colors[0] + '; opacity: 0.9"></i><p>0 - 10</p>';
+    div.innerHTML += '<b>Airports per State</b><br />';
+    div.innerHTML += '<i style="background: ' + colors[6] + '; opacity: 0.5;"></i><p> >60</p>';
+    div.innerHTML += '<i style="background: ' + colors[5] + '; opacity: 0.5;"></i><p>51 - 60</p>';
+    div.innerHTML += '<i style="background: ' + colors[4] + '; opacity: 0.5;"></i><p>41 - 50</p>';
+    div.innerHTML += '<i style="background: ' + colors[3] + '; opacity: 0.5;"></i><p>31 - 40</p>';
+    div.innerHTML += '<i style="background: ' + colors[2] + '; opacity: 0.5;"></i><p>21 - 30</p>';
+    div.innerHTML += '<i style="background: ' + colors[1] + '; opacity: 0.5;"></i><p>11 - 20</p>';
+    div.innerHTML += '<i style="background: ' + colors[0] + '; opacity: 0.5;"></i><p>0 - 10</p>';
     div.innerHTML += '<hr><b>Control Towers<b><br />';
     div.innerHTML += '<i class="fa fa-plane marker-color-1"></i><p>Airport w/ Control Tower</p>';
     div.innerHTML += '<i class="fa fa-plane marker-color-2"></i><p>No Control Tower</p>';
     // Return the Legend div containing the HTML content
     return div;
 };
+
 legend.addTo(airmap);
 
-//scale
+//adds scale
 L.control.scale({position: 'bottomleft'}).addTo(airmap);
