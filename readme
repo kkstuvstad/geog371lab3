@@ -16,7 +16,7 @@ Sources:
 - jQuery Library: https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js
 - Basemap Source: http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png
 - Font Awesome Source: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css
-- Leaflet Library: https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js
+- Leaflet Libraries: https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js, https://unpkg.com/leaflet@1.4.0/dist/leaflet.css, https://unpkg.com/leaflet@1.4.0/dist/leaflet.js
 - US States Data Source: Created by Mike Bostock, https://d3js.org/
 - Airports Data Source: https://catalog.data.gov/dataset/usgs-small-scale-dataset-airports-of-the-united-states-201207-shapefile
 - Google Font Library (Ubuntu): https://fonts.google.com/?selection.family=Ubuntu
